@@ -72,6 +72,6 @@ button:focus-visible {
     background-color: #213547;
   }
   .list-item-text {
-    color: #e0e0e0; /* A light color for dark mode */
+    color: #000000; /* A light color for dark mode */
   }
 }
