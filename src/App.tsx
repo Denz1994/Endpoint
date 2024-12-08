@@ -8,7 +8,7 @@ function Loading() {
 // Simulates a delay in the component. Not the actual todo list api call, just the component's code loading.
 const LazyTodoList = React.lazy(() => {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(import("./TodoList")), 1000);
+    setTimeout(() => resolve(import("./TodoList")), 500);
   });
 });
 function App() {
