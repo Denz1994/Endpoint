@@ -61,7 +61,7 @@ const partitionTodos= (todoList: Todo[] )=>{
             partitionedTodos.completed.push(todo);
         }
         // Normalizes for timezones
-        else if(currentTime.getTime() > new Date(todo.dueDate).getTime()){
+        else if(currentTime.getTime() < new Date(todo.dueDate).getTime()){
             partitionedTodos.overdue.push(todo);
         }
         else{
