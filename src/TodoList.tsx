@@ -15,10 +15,12 @@ interface PartitionedTodoList{
 
  // We handle "null" dates in the label element. Assumes api doesn't allow for "undefined" due dates.
  const formatDate = (date:Date)=>{
-    const day = date.getDate();
-    const month = date.getMonth() + 1; // For some reason months are zero-based
-    const year = date.getFullYear();
-    return String(`${day}/${month}/${year}`)
+    // Forgot we can use padding for strings. Handles dates with one digit.
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // For some reason months are zero-based
+    const year = String(date.getFullYear());
+
+    return String(`${month}/${day}/${year}`)
 }
 
 const partitionTodos= (todoList: Todo[] )=>{
