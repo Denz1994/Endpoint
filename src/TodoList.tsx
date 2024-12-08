@@ -39,7 +39,15 @@ function TodoList(){
     .catch((error)=>{
         console.error(error);
     })},[]);
-    debugger
+    
+    // We handle "null" dates in the label element
+    const formatDate = (date:Date)=>{
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // For some reason months are zero-based
+        const year = date.getFullYear();
+        return String(`${day}/${month}/${year}`)
+    }
+    
     return (
     <div className="todo-list">
         <h1 className ="list-header">Todos</h1>
@@ -60,7 +68,7 @@ function TodoList(){
                         {todo.description}
                     </label>
                     <label htmlFor={`todo-${index}`} className="list-item-date">
-                        {todo.dueDate}
+                        {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
                     </label>
                 </div>
             )
