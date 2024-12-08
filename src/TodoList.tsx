@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
 interface Todo{
 id: String;
@@ -10,7 +10,14 @@ dueDate: String;
 function TodoList(){
     // TODO: Separate into 3 lists: overdue, completed, not completed
     const [todos, setTodos] = useState([]);
+    const hasAttemptedFetch = useRef(false);
     useEffect(()=>{
+    // Prevents duplicate call to API. Strict mode does this in dev-mode intentionally to detect side effects. 
+    // Docs here: https://legacy.reactjs.org/docs/strict-mode.html#detecting-unexpected-side-effects
+    if (hasAttemptedFetch.current){
+        return;
+    }
+    hasAttemptedFetch.current = true;
     const url = "https://b0f179aa-a791-47b5-a7ca-5585ba9e3642.mock.pstmn.io/get";
     const options = {
         method: "GET",
