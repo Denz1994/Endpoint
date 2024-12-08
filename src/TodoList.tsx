@@ -69,6 +69,16 @@ const partitionTodos= (todoList: Todo[] )=>{
         }
     });
 
+    // Sort each category by dueDate. Basic sort algorithm for descending
+    const sortByDate = (a: Todo, b: Todo) => {
+        const dateA = new Date(a.dueDate).getTime();
+        const dateB = new Date(b.dueDate).getTime();
+        return  dateB - dateA; 
+    };
+
+    partitionedTodos.overdue.sort(sortByDate);
+    partitionedTodos.incompleteNotOverdue.sort(sortByDate);
+
     return partitionedTodos;
 };
 
