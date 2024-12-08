@@ -1,16 +1,45 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
-const testTodos = ['A', 'Some other task', 'New Item here'];
+interface Todo{
+id: String;
+description:String;
+isComplete: boolean;
+dueDate: String;
+}
+
 function TodoList(){
     // TODO: Separate into 3 lists: overdue, completed, not completed
-    const [todos, setTodos] = useState(testTodos);
+    const [todos, setTodos] = useState([]);
+    useEffect(()=>{
+    const url = "https://b0f179aa-a791-47b5-a7ca-5585ba9e3642.mock.pstmn.io/get";
+    const options = {
+        method: "GET",
+        headers: {
+            "X-Api-Key": "PMAK-65a6d95a73d7f315b0b3ae13-28f9a3fada28cc91e0990b112478319641"
+        }
+    }
+    fetch(url,options)
+    .then((response)=>{
+        if (!response.ok){
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then((data)=>{
+        console.log(data);
+        setTodos(data)
+        
+    })
+    .catch((error)=>{
+        console.error(error);
+    })},[]);
 
     return (
     <div className="todo-list">
         <h1 className ="list-header">Todos</h1>
         <ul className ="list-items">
-        {todos.map((todo, index)=>{
-            return(<li key={index} className="list-item">{todo}</li>)
+        {todos.map((todo:Todo, index )=>{
+            return(<li key={index} className="list-item">{todo.description}</li>)
             })
         }
         </ul>  
