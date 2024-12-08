@@ -1,10 +1,10 @@
 import {useState, useEffect, useRef} from 'react';
 
 interface Todo{
-id: String;
-description:String;
+id: string;
+description:string;
 isComplete: boolean;
-dueDate: String;
+dueDate: string;
 }
 
 function TodoList(){
@@ -35,21 +35,38 @@ function TodoList(){
     .then((data)=>{
         console.log(data);
         setTodos(data)
-        
     })
     .catch((error)=>{
         console.error(error);
     })},[]);
-
+    debugger
     return (
     <div className="todo-list">
         <h1 className ="list-header">Todos</h1>
-        <ul className ="list-items">
+        <div className ="list-items">
         {todos.map((todo:Todo, index )=>{
-            return(<li key={index} className="list-item">{todo.description}</li>)
+            return(
+                <div className="list-item">
+                    <input
+                        type="checkbox"
+                        id={`todo-${index}`}
+                        name={todo.description}
+                        className="list-item-checkbox"
+                        onClick={() => {
+                            console.log('clicked');
+                        }}
+                    />
+                    <label htmlFor={`todo-${index}`} className="list-item-description">
+                        {todo.description}
+                    </label>
+                    <label htmlFor={`todo-${index}`} className="list-item-date">
+                        {todo.dueDate}
+                    </label>
+                </div>
+            )
             })
         }
-        </ul>  
+        </div>  
     </div>)
 }
 
