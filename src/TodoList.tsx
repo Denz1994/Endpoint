@@ -1,15 +1,62 @@
 import {useState, useEffect, useRef} from 'react';
 
 interface Todo{
-id: string;
-description:string;
-isComplete: boolean;
-dueDate: string;
+    id: string;
+    description:string;
+    isComplete: boolean;
+    dueDate: string;
 }
+
+interface PartitionedTodoList{
+    overdue:Todo[],
+    incompleteNotOverdue: Todo[],
+    completed:Todo[],
+}
+
+ // We handle "null" dates in the label element. Assumes api doesn't allow for "undefined" due dates.
+ const formatDate = (date:Date)=>{
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // For some reason months are zero-based
+    const year = date.getFullYear();
+    return String(`${day}/${month}/${year}`)
+}
+
+const partitionTodos= (todoList: Todo[] )=>{
+    const currentTime = new Date(); 
+    const partitionedTodos: PartitionedTodoList = {
+        overdue:[],
+        incompleteNotOverdue: [],
+        completed:[],
+    };
+
+    // Check todos in this order: completed, overdue, not completed
+    todoList.forEach((todo:Todo)=>{
+        if (!todo.isComplete && todo.dueDate === null){
+            partitionedTodos.incompleteNotOverdue.push(todo);
+        }
+        else if(todo.isComplete){
+            partitionedTodos.completed.push(todo);
+        }
+        // Normalizes for timezones
+        else if(currentTime.getTime() > new Date(todo.dueDate).getTime()){
+            partitionedTodos.overdue.push(todo);
+        }
+        else{
+            partitionedTodos.incompleteNotOverdue.push(todo);
+        }
+    });
+
+    return partitionedTodos;
+};
 
 function TodoList(){
     // TODO: Separate into 3 lists: overdue, completed, not completed
-    const [todos, setTodos] = useState([]);
+    const defaultPartitionedTodoList = {
+        overdue:[],
+        incompleteNotOverdue: [],
+        completed:[],
+    };
+    const [todos, setTodos] = useState<PartitionedTodoList>(defaultPartitionedTodoList);
     const hasAttemptedFetch = useRef(false);
     useEffect(()=>{
     // Prevents duplicate call to API. Strict mode does this in dev-mode intentionally to detect side effects. 
@@ -34,27 +81,21 @@ function TodoList(){
     })
     .then((data)=>{
         console.log(data);
-        setTodos(data)
+        const partitionedTodoList = partitionTodos(data);
+        setTodos(partitionedTodoList)
     })
     .catch((error)=>{
         console.error(error);
     })},[]);
     
-    // We handle "null" dates in the label element
-    const formatDate = (date:Date)=>{
-        const day = date.getDate();
-        const month = date.getMonth() + 1; // For some reason months are zero-based
-        const year = date.getFullYear();
-        return String(`${day}/${month}/${year}`)
-    }
     
     return (
     <div className="todo-list">
         <h1 className ="list-header">Todos</h1>
         <div className ="list-items">
-        {todos.map((todo:Todo, index )=>{
+        {todos.overdue.map((todo:Todo, index )=>{
             return(
-                <div className="list-item">
+                <div key={index} className="list-item">
                     <input
                         type="checkbox"
                         id={`todo-${index}`}
@@ -74,8 +115,54 @@ function TodoList(){
             )
             })
         }
-        </div>  
-    </div>)
+
+        {todos.incompleteNotOverdue.map((todo:Todo, index )=>{
+                    return(
+                        <div key={index} className="list-item">
+                            <input
+                                type="checkbox"
+                                id={`todo-${index}`}
+                                name={todo.description}
+                                className="list-item-checkbox"
+                                onClick={() => {
+                                    console.log('clicked');
+                                }}
+                            />
+                            <label htmlFor={`todo-${index}`} className="list-item-description">
+                                {todo.description}
+                            </label>
+                            <label htmlFor={`todo-${index}`} className="list-item-date">
+                                {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
+                            </label>
+                        </div>
+                    )
+                    })
+                }
+
+        {todos.completed.map((todo:Todo, index )=>{
+                    return(
+                        <div key={index} className="list-item">
+                            <input
+                                type="checkbox"
+                                id={`todo-${index}`}
+                                name={todo.description}
+                                className="list-item-checkbox"
+                                onClick={() => {
+                                    console.log('clicked');
+                                }}
+                            />
+                            <label htmlFor={`todo-${index}`} className="list-item-description">
+                                {todo.description}
+                            </label>
+                            <label htmlFor={`todo-${index}`} className="list-item-date">
+                                {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
+                            </label>
+                        </div>
+                    )
+                    })
+                }
+                </div>  
+            </div>)
 }
 
 export default TodoList;
