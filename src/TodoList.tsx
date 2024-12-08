@@ -22,6 +22,27 @@ interface PartitionedTodoList{
 
     return String(`${month}/${day}/${year}`)
 }
+const handleUpdate = (todoId:string)=>{
+
+    const url = `https://b0f179aa-a791-47b5-a7ca-5585ba9e3642.mock.pstmn.io/patch/${todoId}`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Api-Key": "PMAK-65a6d95a73d7f315b0b3ae13-28f9a3fada28cc91e0990b112478319641"
+        }
+    }
+    fetch(url,options)
+    .then((response)=>{
+        if (!response.ok){
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        return response.json();
+    })
+    .catch((error)=>{
+        console.error(error);
+    });
+}
 
 const partitionTodos= (todoList: Todo[] )=>{
     const currentTime = new Date(); 
@@ -31,7 +52,7 @@ const partitionTodos= (todoList: Todo[] )=>{
         completed:[],
     };
 
-    // Check todos in this order: completed, overdue, not completed
+    // Check todos in this order: not completed & no due date, completed, overdue, not completed
     todoList.forEach((todo:Todo)=>{
         if (!todo.isComplete && todo.dueDate === null){
             partitionedTodos.incompleteNotOverdue.push(todo);
@@ -51,6 +72,8 @@ const partitionTodos= (todoList: Todo[] )=>{
     return partitionedTodos;
 };
 
+
+
 function TodoList(){
     // TODO: Separate into 3 lists: overdue, completed, not completed
     const defaultPartitionedTodoList = {
@@ -60,6 +83,32 @@ function TodoList(){
     };
     const [todos, setTodos] = useState<PartitionedTodoList>(defaultPartitionedTodoList);
     const hasAttemptedFetch = useRef(false);
+
+    const checkboxClickHandler = (todoId:string, isComplete:boolean)=>{
+
+        // Locally update state
+        setTodos((prevTodos) => {
+            const updatedTodos = { ...prevTodos };
+            const updateTodo = (todoList: Todo[]) => {
+              return todoList.map((todo) => {
+                if (todo.id === todoId) {
+                  return { ...todo, isComplete: !isComplete }; 
+                }
+                return todo;
+              });
+            };
+      
+            updatedTodos.overdue = updateTodo(updatedTodos.overdue);
+            updatedTodos.incompleteNotOverdue = updateTodo(updatedTodos.incompleteNotOverdue);
+            updatedTodos.completed = updateTodo(updatedTodos.completed);
+      
+            return updatedTodos;
+          });
+
+        // Update server
+        handleUpdate(todoId);
+    }
+
     useEffect(()=>{
     // Prevents duplicate call to API. Strict mode does this in dev-mode intentionally to detect side effects. 
     // Docs here: https://legacy.reactjs.org/docs/strict-mode.html#detecting-unexpected-side-effects
@@ -101,10 +150,11 @@ function TodoList(){
                     <input
                         type="checkbox"
                         id={`todo-${index}`}
+                        checked={todo.isComplete}
                         name={todo.description}
                         className="list-item-checkbox"
                         onClick={() => {
-                            console.log('clicked');
+                            checkboxClickHandler(todo.id, todo.isComplete);
                         }}
                     />
                     <label htmlFor={`todo-${index}`} className="list-item-description">
@@ -124,10 +174,11 @@ function TodoList(){
                             <input
                                 type="checkbox"
                                 id={`todo-${index}`}
+                                checked={todo.isComplete}
                                 name={todo.description}
                                 className="list-item-checkbox"
                                 onClick={() => {
-                                    console.log('clicked');
+                                    checkboxClickHandler(todo.id, todo.isComplete);
                                 }}
                             />
                             <label htmlFor={`todo-${index}`} className="list-item-description">
@@ -146,11 +197,12 @@ function TodoList(){
                         <div key={index} className="list-item">
                             <input
                                 type="checkbox"
+                                checked={todo.isComplete}
                                 id={`todo-${index}`}
                                 name={todo.description}
                                 className="list-item-checkbox"
                                 onClick={() => {
-                                    console.log('clicked');
+                                    checkboxClickHandler(todo.id, todo.isComplete);
                                 }}
                             />
                             <label htmlFor={`todo-${index}`} className="list-item-description">
