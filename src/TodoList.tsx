@@ -85,7 +85,6 @@ const partitionTodos= (todoList: Todo[] )=>{
 
 
 function TodoList(){
-    // TODO: Separate into 3 lists: overdue, completed, not completed
     const defaultPartitionedTodoList = {
         overdue:[],
         incompleteNotOverdue: [],
@@ -95,24 +94,17 @@ function TodoList(){
     const hasAttemptedFetch = useRef(false);
 
     const checkboxClickHandler = (todoId:string, isComplete:boolean)=>{
-
         // Locally update state
-        setTodos((prevTodos) => {
-            const updatedTodos = { ...prevTodos };
-            const updateTodo = (todoList: Todo[]) => {
-              return todoList.map((todo) => {
-                if (todo.id === todoId) {
-                  return { ...todo, isComplete: !isComplete }; 
-                }
-                return todo;
-              });
-            };
-            updatedTodos.overdue = updateTodo(updatedTodos.overdue);
-            updatedTodos.incompleteNotOverdue = updateTodo(updatedTodos.incompleteNotOverdue);
-            updatedTodos.completed = updateTodo(updatedTodos.completed);
-            console.log(updatedTodos, todos)
-            return updatedTodos;
-          });
+        const allTodos = [...todos.completed, ...todos.incompleteNotOverdue, ...todos.overdue];
+        const clickedTodo = allTodos.find(todo=>{ return todo.id ===todoId});
+        if (clickedTodo){
+            clickedTodo.isComplete = !clickedTodo?.isComplete;
+        }
+        else{
+            throw new Error("Clicked Todo doesn't exist.");
+        }
+        const newlyPartitionedTodos = partitionTodos(allTodos)
+        setTodos(newlyPartitionedTodos);
 
         // Update server
         handleUpdate(todoId);
@@ -157,7 +149,8 @@ function TodoList(){
             return(
                 <div key={index}
                 className="list-item overdue"
-                onClick={() => {
+                onClick={(event) => {
+                    event.stopPropagation();
                     checkboxClickHandler(todo.id, todo.isComplete);
                 }}>
                     <input
@@ -182,7 +175,8 @@ function TodoList(){
             return(
                 <div key={index}
                 className="list-item incomplete-not-overdue" 
-                onClick={() => {
+                onClick={(event) => {
+                    event.stopPropagation();
                     checkboxClickHandler(todo.id, todo.isComplete);
                 }}>
                     <input
@@ -206,7 +200,8 @@ function TodoList(){
                 return(
                     <div key={index} 
                     className="list-item completed" 
-                    onClick={() => {
+                    onClick={(event) => {
+                        event.stopPropagation();
                         checkboxClickHandler(todo.id, todo.isComplete);
                     }}>
                         <input
