@@ -1,0 +1,57 @@
+.list-items{
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1 rem;
+    justify-content: center;
+    align-content: center;
+    max-height: 300px;
+    padding:20px;
+    overflow-y: auto;
+}
+
+.list-item{
+    display: flex;
+    margin:2px 0px;
+    padding:0px 10px;
+    flex-direction: row;
+    line-height: 5px;
+    align-content: center;
+
+}
+.list-item-description{
+    width: 200px;
+    padding-left: 10px;
+    text-align: left;
+    text-overflow: ellipsis;
+}
+
+/* Had to look up how to do these transitions without sass precompiler*/
+.overdue{
+    background-color: #fecdc9;
+    transition: background-color 0.3s ease
+}
+.overdue:hover {
+    background-color: #ff9999; /* Lighter red tint on hover */
+}
+
+.incomplete-not-overdue{
+    background-color: #f3f3f3;
+    transition: background-color 0.3s ease
+}
+.incomplete-not-overdue:hover {
+    background-color: #ffd966; /* Lighter yellow tint on hover */
+}
+
+.completed{
+    background-color: #ccffcc;
+    transition: background-color 0.3s ease
+}
+.completed:hover {
+    background-color: #a8d09d; /* Lighter green tint on hover */
+}
+
+.completed-text{
+    text-decoration: line-through;
+}

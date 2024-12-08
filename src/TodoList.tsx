@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
-
+import "./Todolist.css"
 interface Todo{
     id: string;
     description:string;
@@ -97,11 +97,10 @@ function TodoList(){
                 return todo;
               });
             };
-      
             updatedTodos.overdue = updateTodo(updatedTodos.overdue);
             updatedTodos.incompleteNotOverdue = updateTodo(updatedTodos.incompleteNotOverdue);
             updatedTodos.completed = updateTodo(updatedTodos.completed);
-      
+            console.log(updatedTodos, todos)
             return updatedTodos;
           });
 
@@ -147,21 +146,21 @@ function TodoList(){
         {todos.overdue.map((todo:Todo, index )=>{
             return(
                 <div key={index}
-                className="list-item"
+                className="list-item overdue"
                 onClick={() => {
                     checkboxClickHandler(todo.id, todo.isComplete);
                 }}>
                     <input
                         type="checkbox"
                         id={`todo-${index}`}
-                        checked={todo.isComplete}
+                        defaultChecked={todo.isComplete}
                         name={todo.description}
                         className="list-item-checkbox"
                     />
                     <p className="list-item-description">
                         {todo.description}
                     </p>
-                    <p className="list-item-date">
+                    <p>
                         {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
                     </p>
                 </div>
@@ -170,57 +169,56 @@ function TodoList(){
         }
 
         {todos.incompleteNotOverdue.map((todo:Todo, index )=>{
-                    return(
-                        <div key={index}
-                        className="list-item" 
-                        onClick={() => {
-                            checkboxClickHandler(todo.id, todo.isComplete);
-                        }}>
-                            <input
-                                type="checkbox"
-                                id={`todo-${index}`}
-                                checked={todo.isComplete}
-                                name={todo.description}
-                                className="list-item-checkbox"
-                            />
-                            <p className="list-item-description">
-                                {todo.description}
-                            </p>
-                            <p className="list-item-date">
-                                {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
-                            </p>
-                        </div>
-                    )
-                    })
-                }
-
+            return(
+                <div key={index}
+                className="list-item incomplete-not-overdue" 
+                onClick={() => {
+                    checkboxClickHandler(todo.id, todo.isComplete);
+                }}>
+                    <input
+                        type="checkbox"
+                        id={`todo-${index}`}
+                        defaultChecked={todo.isComplete}
+                        name={todo.description}
+                        className="list-item-checkbox"
+                    />
+                    <p className="list-item-description">
+                        {todo.description}
+                    </p>
+                    <p >
+                        {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
+                    </p>
+                </div>
+            )
+            })
+        }
         {todos.completed.map((todo:Todo, index )=>{
-                    return(
-                        <div key={index} 
-                        className="list-item" 
-                        onClick={() => {
-                            checkboxClickHandler(todo.id, todo.isComplete);
-                        }}>
-                            <input
-                                type="checkbox"
-                                checked={todo.isComplete}
-                                id={`todo-${index}`}
-                                name={todo.description}
-                                className="list-item-checkbox"
-                                
-                            />
-                            <p className="list-item-description">
-                                {todo.description}
-                            </p>
-                            <p className="list-item-date">
-                                {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
-                            </p>
-                        </div>
-                    )
-                    })
-                }
-                </div>  
-            </div>)
+                return(
+                    <div key={index} 
+                    className="list-item completed" 
+                    onClick={() => {
+                        checkboxClickHandler(todo.id, todo.isComplete);
+                    }}>
+                        <input
+                            type="checkbox"
+                            defaultChecked={todo.isComplete}
+                            id={`todo-${index}`}
+                            name={todo.description}
+                            className="list-item-checkbox"
+                            
+                        />
+                        <p className="list-item-description completed-text">
+                            {todo.description}
+                        </p>
+                        <p>
+                            {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
+                        </p>
+                    </div>
+                )
+                })
+            }
+            </div>  
+        </div>)
 }
 
 export default TodoList;
