@@ -146,16 +146,17 @@ function TodoList(){
         <div className ="list-items">
         {todos.overdue.map((todo:Todo, index )=>{
             return(
-                <div key={index} className="list-item">
+                <div key={index}
+                className="list-item"
+                onClick={() => {
+                    checkboxClickHandler(todo.id, todo.isComplete);
+                }}>
                     <input
                         type="checkbox"
                         id={`todo-${index}`}
                         checked={todo.isComplete}
                         name={todo.description}
                         className="list-item-checkbox"
-                        onClick={() => {
-                            checkboxClickHandler(todo.id, todo.isComplete);
-                        }}
                     />
                     <p className="list-item-description">
                         {todo.description}
@@ -170,16 +171,17 @@ function TodoList(){
 
         {todos.incompleteNotOverdue.map((todo:Todo, index )=>{
                     return(
-                        <div key={index} className="list-item">
+                        <div key={index}
+                        className="list-item" 
+                        onClick={() => {
+                            checkboxClickHandler(todo.id, todo.isComplete);
+                        }}>
                             <input
                                 type="checkbox"
                                 id={`todo-${index}`}
                                 checked={todo.isComplete}
                                 name={todo.description}
                                 className="list-item-checkbox"
-                                onClick={() => {
-                                    checkboxClickHandler(todo.id, todo.isComplete);
-                                }}
                             />
                             <p className="list-item-description">
                                 {todo.description}
@@ -194,16 +196,18 @@ function TodoList(){
 
         {todos.completed.map((todo:Todo, index )=>{
                     return(
-                        <div key={index} className="list-item">
+                        <div key={index} 
+                        className="list-item" 
+                        onClick={() => {
+                            checkboxClickHandler(todo.id, todo.isComplete);
+                        }}>
                             <input
                                 type="checkbox"
                                 checked={todo.isComplete}
                                 id={`todo-${index}`}
                                 name={todo.description}
                                 className="list-item-checkbox"
-                                onClick={() => {
-                                    checkboxClickHandler(todo.id, todo.isComplete);
-                                }}
+                                
                             />
                             <p className="list-item-description">
                                 {todo.description}
