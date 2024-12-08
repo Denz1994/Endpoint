@@ -157,12 +157,12 @@ function TodoList(){
                             checkboxClickHandler(todo.id, todo.isComplete);
                         }}
                     />
-                    <label htmlFor={`todo-${index}`} className="list-item-description">
+                    <p className="list-item-description">
                         {todo.description}
-                    </label>
-                    <label htmlFor={`todo-${index}`} className="list-item-date">
+                    </p>
+                    <p className="list-item-date">
                         {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
-                    </label>
+                    </p>
                 </div>
             )
             })
@@ -181,12 +181,12 @@ function TodoList(){
                                     checkboxClickHandler(todo.id, todo.isComplete);
                                 }}
                             />
-                            <label htmlFor={`todo-${index}`} className="list-item-description">
+                            <p className="list-item-description">
                                 {todo.description}
-                            </label>
-                            <label htmlFor={`todo-${index}`} className="list-item-date">
+                            </p>
+                            <p className="list-item-date">
                                 {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
-                            </label>
+                            </p>
                         </div>
                     )
                     })
@@ -205,12 +205,12 @@ function TodoList(){
                                     checkboxClickHandler(todo.id, todo.isComplete);
                                 }}
                             />
-                            <label htmlFor={`todo-${index}`} className="list-item-description">
+                            <p className="list-item-description">
                                 {todo.description}
-                            </label>
-                            <label htmlFor={`todo-${index}`} className="list-item-date">
+                            </p>
+                            <p className="list-item-date">
                                 {todo.dueDate ? formatDate(new Date(todo.dueDate)): ''}
-                            </label>
+                            </p>
                         </div>
                     )
                     })
